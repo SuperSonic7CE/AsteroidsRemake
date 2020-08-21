@@ -1,5 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+Steven Esposito
+8/21/2020
+*/
 
 #include "PawnBase.h"
 #include "Components/BoxComponent.h"

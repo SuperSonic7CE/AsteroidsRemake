@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/*
+Steven Esposito
+8/21/2020
+*/
 
 #pragma once
 
@@ -36,11 +39,16 @@ private:
 	//	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float MoveSpeed = 100.0f;
+		float MoveSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float RotateSpeed = 100.0f;
+		float FrictionAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float RotateSpeed;
+
+	float CurrentSpeed;
 
 	FVector MoveDirection;
+	FVector PreviousForward;
 	FQuat RotationDirection;
 
 	//APlayerController* PlayerControllerRef;
