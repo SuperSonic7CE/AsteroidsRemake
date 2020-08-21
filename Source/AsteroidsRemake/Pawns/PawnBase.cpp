@@ -1,5 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+Steven Esposito
+8/21/2020
+*/
 
 #include "PawnBase.h"
 #include "Components/BoxComponent.h"
@@ -10,7 +12,7 @@
 APawnBase::APawnBase()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	HitBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 	RootComponent = HitBoxComp;

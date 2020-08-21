@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/*
+Steven Esposito
+8/21/2020
+*/
 
 #pragma once
 
@@ -14,7 +17,7 @@ class ASTEROIDSREMAKE_API APawnBase : public APawn
 {
 	GENERATED_BODY()
 
-private:
+protected:
 
 	/** Components */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
