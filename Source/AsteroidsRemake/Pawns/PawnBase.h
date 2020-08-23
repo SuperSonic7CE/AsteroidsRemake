@@ -11,11 +11,17 @@ Steven Esposito
 
 class UBoxComponent;
 //class UHealthComponent;
+class AProjectileBase;
 
 UCLASS()
 class ASTEROIDSREMAKE_API APawnBase : public APawn
 {
 	GENERATED_BODY()
+
+private:
+
+	AProjectileBase* TempProjectile;
+	TArray<AActor*> ProjectileActors;
 
 protected:
 
@@ -28,12 +34,19 @@ protected:
 		USceneComponent* SpawnPointComp;
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		//UHealthComponent* HealthComp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AProjectileBase> ProjectileClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
+		int ProjectileMaxCount = 4;
 
 	/** Effects */
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		UParticleSystem* DeathParticle;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		USoundBase* DeathSFX;		
+
+	UFUNCTION()
+		void Fire();
 
 public:
 	// Sets default values for this pawn's properties
