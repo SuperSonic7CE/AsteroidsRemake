@@ -12,7 +12,7 @@ Steven Esposito
 // Sets default values
 APawnBase::APawnBase()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	HitBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
@@ -53,6 +53,6 @@ void APawnBase::Fire()
 			TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
 
 			TempProjectile->SetOwner(this);
-		}		
+		}
 	}
 }

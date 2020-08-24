@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/*
+Steven Esposito
+8/22/2020
+*/
 
 #pragma once
 
