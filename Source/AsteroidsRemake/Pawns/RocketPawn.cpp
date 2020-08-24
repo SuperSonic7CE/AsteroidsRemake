@@ -32,7 +32,7 @@ void ARocketPawn::Tick(float DeltaTime)
 	Rotate();
 	Move();
 
-    //UE_LOG(LogTemp, Warning, TEXT("Forward Vector: %f, %f, %f"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
+	//UE_LOG(LogTemp, Warning, TEXT("Forward Vector: %f, %f, %f"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
 }
 
 void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -61,7 +61,7 @@ void ARocketPawn::CalculateMoveInput(float Value)
 	}
 
 	MoveDirection = PreviousForward * Value * CurrentSpeed * GetWorld()->DeltaTimeSeconds;
-	
+
 	//UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), MoveDirection.X, MoveDirection.Y, MoveDirection.Z);
 }
 
