@@ -6,6 +6,7 @@ Steven Esposito
 #include "PawnBase.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "AsteroidsRemake/Actors/ProjectileBase.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -33,4 +34,25 @@ void APawnBase::DestroyPawn()
 {
 	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
 	UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
+}
+
+void APawnBase::Fire()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
+
+	if (ProjectileClass)
+	{
+		//TArray<AActor*> ProjectileActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AProjectileBase::StaticClass(), ProjectileActors);
+
+		if (ProjectileActors.Num() < ProjectileMaxCount)
+		{
+			FVector SpawnLocation = SpawnPointComp->GetComponentLocation();
+			FRotator SpawnRotation = SpawnPointComp->GetComponentRotation();
+
+			TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
+
+			TempProjectile->SetOwner(this);
+		}		
+	}
 }

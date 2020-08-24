@@ -41,6 +41,7 @@ void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARocketPawn::CalculateMoveInput);
 	PlayerInputComponent->BindAxis("Turn", this, &ARocketPawn::CalculateRotateInput);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ARocketPawn::Fire);
 	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ARocketPawn::Fire);
 }
 
