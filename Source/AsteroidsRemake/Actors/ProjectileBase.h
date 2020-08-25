@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/22/2020
+8/25/2020
 */
 
 #pragma once
@@ -34,12 +34,22 @@ private:
 	/** VARIABLES */
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 		TSubclassOf<UDamageType> DamageType;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
-		float MovementSpeed = 1300.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 		float Damage = 50.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 		float Lifespan = 1.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float MovementSpeed = 1300.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float GravityScale = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float BouncinessValue = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		float BounceFrictionValue = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		bool bBounceOffSafeSurfaces = true;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
+		bool bRandomInitialRotation = true;*/
 	//UPROPERTY(EditAnywhere, Category = "Effects")
 		//UParticleSystem* HitParticle;
 	UPROPERTY(EditAnywhere, Category = "Effects")
@@ -56,4 +66,6 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	//FVector RandomRotationVector;
 };

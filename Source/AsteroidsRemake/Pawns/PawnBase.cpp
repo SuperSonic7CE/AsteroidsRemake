@@ -1,12 +1,12 @@
 /*
 Steven Esposito
-8/21/2020
+8/25/2020
 */
 
 #include "PawnBase.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "AsteroidsRemake/Actors/ProjectileBase.h"
+#include "AsteroidsRemake/Actors/ProjectilePlayerBullet.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -40,19 +40,18 @@ void APawnBase::Fire()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
 
-	if (ProjectileClass)
+	if (PlayerBulletClass)
 	{
 		//TArray<AActor*> ProjectileActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AProjectileBase::StaticClass(), ProjectileActors);
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AProjectilePlayerBullet::StaticClass(), PlayerBulletActors);
 
-		if (ProjectileActors.Num() < ProjectileMaxCount)
+		if (PlayerBulletActors.Num() < PlayerBulletMaxCount)
 		{
 			FVector SpawnLocation = SpawnPointComp->GetComponentLocation();
 			FRotator SpawnRotation = SpawnPointComp->GetComponentRotation();
 
-			TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(ProjectileClass, SpawnLocation, SpawnRotation);
-
-			TempProjectile->SetOwner(this);
+			TempPlayerBullet = GetWorld()->SpawnActor<AProjectileBase>(PlayerBulletClass, SpawnLocation, SpawnRotation);
+			TempPlayerBullet->SetOwner(this);
 		}
 	}
 }

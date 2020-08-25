@@ -30,7 +30,7 @@ void ARocketPawn::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	Rotate();
-	Move();
+	Move();	
 
 	//UE_LOG(LogTemp, Warning, TEXT("Forward Vector: %f, %f, %f"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
 }
@@ -81,6 +81,8 @@ void ARocketPawn::Move()
 void ARocketPawn::Rotate()
 {
 	AddActorLocalRotation(RotationDirection, true);
+	/*FVector TempVector = GetActorForwardVector();
+	UE_LOG(LogTemp, Warning, TEXT("Forward Vector X: %f Y: %f Z: %f"), TempVector.X, TempVector.Y, TempVector.Z);*/
 	//MeshComp->AddTorque(FVector(0.0f, 0.0f, 1.0f) * RotateSpeed * MeshComp->GetMass());
 }
 

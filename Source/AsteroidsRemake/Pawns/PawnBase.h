@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/21/2020
+8/25/2020
 */
 
 #pragma once
@@ -12,6 +12,7 @@ Steven Esposito
 class UBoxComponent;
 //class UHealthComponent;
 class AProjectileBase;
+class AProjectilePlayerBullet;
 
 UCLASS()
 class ASTEROIDSREMAKE_API APawnBase : public APawn
@@ -20,8 +21,8 @@ class ASTEROIDSREMAKE_API APawnBase : public APawn
 
 private:
 
-	AProjectileBase* TempProjectile;
-	TArray<AActor*> ProjectileActors;
+	AProjectileBase* TempPlayerBullet;
+	TArray<AActor*> PlayerBulletActors;
 
 protected:
 
@@ -35,9 +36,9 @@ protected:
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		//UHealthComponent* HealthComp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AProjectileBase> ProjectileClass;
+		TSubclassOf<AProjectileBase> PlayerBulletClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
-		int ProjectileMaxCount = 4;
+		int PlayerBulletMaxCount = 4;
 
 	/** Effects */
 	UPROPERTY(EditAnywhere, Category = "Effects")
