@@ -56,4 +56,7 @@ public:
 	void PawnDefeated();
 	virtual void DestroyPawn();
 
+	UFUNCTION()
+		void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+
 };

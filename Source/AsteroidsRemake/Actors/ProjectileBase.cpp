@@ -10,6 +10,7 @@ Steven Esposito
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Math/Vector.h"
+#include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -71,24 +72,28 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Projectile hit!"));
+	UE_LOG(LogTemp, Warning, TEXT("Projectile hit!"));
 
-	AActor* MyOwner = GetOwner();
+	//AActor* MyOwner = GetOwner();
 
-	if (!MyOwner)
-	{
-		return;
-	}
+	//if (!MyOwner)
+	//{
+		//return;
+	//}
 
 	if (OtherActor && OtherActor != this)
 	{
-		if (OtherActor != MyOwner && OtherActor->GetClass() != this->GetClass())
+		//if (OtherActor != MyOwner) //&& (!Cast<AProjectileAsteroid>(OtherActor) || !Cast<AProjectileAsteroid>(this)))
+		if (!Cast<AProjectileAsteroid>(OtherActor) || !Cast<AProjectileAsteroid>(this))
 		{
-			UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
+			//UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
 			//UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation());
 			//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
 			//GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitShake);
-			Destroy();
+			
+			//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			
+			DestroyProjectile(OtherActor->GetActorRightVector());
 		}
 		//else
 		//{
@@ -100,6 +105,11 @@ void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		//	//SetActorRotation(TempVector.Rotation());
 		//	//SetActorLocation(FVector(GetActorForwardVector().X, GetActorForwardVector().Y + 1, GetActorForwardVector().Z));
 		//	//UE_LOG(LogTmep, Warning, TEXT("Speed: %f"), ProjectileMovement->Set)
-		//}
+		//}		
 	}
+}
+
+void AProjectileBase::DestroyProjectile(FVector RightVector)
+{
+	Destroy();
 }

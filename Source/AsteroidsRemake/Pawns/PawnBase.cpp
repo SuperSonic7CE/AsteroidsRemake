@@ -23,6 +23,8 @@ APawnBase::APawnBase()
 
 	SpawnPointComp = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	SpawnPointComp->SetupAttachment(MeshComp);
+
+	OnActorBeginOverlap.AddDynamic(this, &APawnBase::OnOverlapBegin);
 }
 
 void APawnBase::PawnDefeated()
@@ -54,4 +56,9 @@ void APawnBase::Fire()
 			TempPlayerBullet->SetOwner(this);
 		}
 	}
+}
+
+void APawnBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
+{
+	UE_LOG(LogTemp, Error, TEXT("Overlapped!"));	
 }

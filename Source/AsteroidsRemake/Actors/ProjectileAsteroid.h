@@ -17,4 +17,15 @@ class ASTEROIDSREMAKE_API AProjectileAsteroid : public AProjectileBase
 {
 	GENERATED_BODY()
 	
+private:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Projectile", meta = (AllowPrivateAccess = "true"))
+		TSubclassOf<AProjectileBase> SpawnProjectile;
+
+	AProjectileBase* TempSpawnedProjectile;
+
+protected:
+
+	virtual void DestroyProjectile(FVector RightVector) override;
+
 };
