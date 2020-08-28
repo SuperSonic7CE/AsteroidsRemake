@@ -24,6 +24,8 @@ public:
 
 	ARocketPawn();
 
+	void RevivePlayer();
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -49,6 +51,9 @@ private:
 	FVector PreviousForward;
 	FQuat RotationDirection;
 
+	FVector SpawnLocation;
+	FRotator SpawnRotation;
+
 	//APlayerController* PlayerControllerRef;
 	//FHitResult TraceHitResult;
 
@@ -58,9 +63,16 @@ private:
 	void Move();
 	void Rotate();
 
-
 protected:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void FadeOut();
+	UFUNCTION(BlueprintImplementableEvent)
+		void FadeIn();
+
+	void TurnOffInvincibility();
+
+	int InvincibilityDelay = 2;
 };

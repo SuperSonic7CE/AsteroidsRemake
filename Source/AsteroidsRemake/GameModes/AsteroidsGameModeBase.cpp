@@ -4,7 +4,6 @@
 #include "AsteroidsGameModeBase.h"
 #include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
 #include "AsteroidsRemake/Pawns/RocketPawn.h"
-#include "AsteroidsRemake/PlayerControllers/PlayerControllerBase.h"
 #include "Kismet/GameplayStatics.h"
 
 void AAsteroidsGameModeBase::BeginPlay()
@@ -23,7 +22,20 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
     if (DestroyedActor == PlayerRocket)
     {
         PlayerRocket->DestroyPawn();
-        HandleGameOver(false);
+        
+        PlayerLives--;
+
+        if (PlayerLives <= 0)
+        {
+            HandleGameOver(false);
+        }
+        else
+        {
+            FTimerHandle PlayerReviveHandle;
+            FTimerDelegate PlayerReviveDelegate = FTimerDelegate::CreateUObject(PlayerRocket, &ARocketPawn::RevivePlayer);
+
+            GetWorld()->GetTimerManager().SetTimer(PlayerReviveHandle, PlayerReviveDelegate, ReviveDelay, false);
+        }
 
         /*if (RocketPlayerControllerRef)
         {

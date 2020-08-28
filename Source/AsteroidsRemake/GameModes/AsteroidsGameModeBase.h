@@ -31,7 +31,9 @@ public:
 protected:
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
-        int32 StartDelay = 3;
+        int32 ReviveDelay = 3;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
+        int32 PlayerLives = 3;
 
     virtual void BeginPlay() override;
 

@@ -6,6 +6,7 @@ Steven Esposito
 #include "RocketPawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Components/BoxComponent.h"
 //#include "Camera/CameraComponent.h"
 
 ARocketPawn::ARocketPawn()
@@ -21,6 +22,9 @@ ARocketPawn::ARocketPawn()
 void ARocketPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SpawnLocation = GetActorLocation();
+	SpawnRotation = GetActorRotation();
 
 	//PlayerControllerRef = Cast<APlayerController>(GetController());
 }
@@ -88,11 +92,36 @@ void ARocketPawn::Rotate()
 
 void ARocketPawn::DestroyPawn()
 {
+	SetActorEnableCollision(false);
+	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetIsPlayerAlive(false);
 
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 
+	FadeOut();
+
 	//Super::DestroyPawn();
 }
 
+void ARocketPawn::RevivePlayer()
+{
+	FTimerHandle PlayerInvincibilityHandle;
+	FTimerDelegate PlayerInvincibilityDelegate = FTimerDelegate::CreateUObject(this, &ARocketPawn::TurnOffInvincibility);
+
+	GetWorld()->GetTimerManager().SetTimer(PlayerInvincibilityHandle, PlayerInvincibilityDelegate, InvincibilityDelay, false);
+
+	SetActorLocation(SpawnLocation);
+	SetActorRotation(SpawnRotation);
+	
+	SetActorHiddenInGame(false);
+	SetActorTickEnabled(true);
+	SetIsPlayerAlive(true);
+}
+
+void ARocketPawn::TurnOffInvincibility()
+{
+	FadeIn();
+	SetActorEnableCollision(true);	
+	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled:: );
+}

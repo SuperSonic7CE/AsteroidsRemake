@@ -78,7 +78,7 @@ void APawnBase::Fire()
 
 void APawnBase::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
+	//UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
 
 	if (Cast<AProjectileAsteroid>(OtherActor))
 	{
