@@ -52,7 +52,7 @@ void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void ARocketPawn::CalculateMoveInput(float Value)
 {
 	// Give player rocket momentum if MoveForward input is not pressed and CurrentSpeed is not depleted fully by FrictionAmount 
-	if (Value > 0.0f)
+	if (Value >= 1.0f)
 	{
 		CurrentSpeed = MoveSpeed;
 		PreviousForward = GetActorForwardVector();

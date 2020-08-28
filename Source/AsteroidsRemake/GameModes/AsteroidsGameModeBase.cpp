@@ -10,8 +10,27 @@ void AAsteroidsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
+    PrimaryActorTick.bCanEverTick = true;
+
     HandleGameStart();
 }
+
+//void AAsteroidsGameModeBase::Tick(float DeltaSeconds)
+//{
+//    Super::Tick(DeltaSeconds);
+//
+//    UE_LOG(LogTemp, Error, TEXT("Tick is working."));
+//
+//    if (ScoreValue < TotalScore)
+//    {
+//        SetScoreDisplay(++ScoreValue);
+//    }
+//    else if (ScoreValue > TotalScore)
+//    {
+//        ScoreValue = TotalScore;
+//        SetScoreDisplay(ScoreValue);
+//    }
+//}
 
 void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
 {
@@ -22,8 +41,11 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
     if (DestroyedActor == PlayerRocket)
     {
         PlayerRocket->DestroyPawn();
-        
-        PlayerLives--;
+                
+        SetLivesDisplay(--PlayerLives);
+        TotalScore -= 1000;
+        ScoreValue = TotalScore;
+        SetScoreDisplay(ScoreValue);
 
         if (PlayerLives <= 0)
         {
@@ -44,6 +66,9 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
     }
     else if (AProjectileAsteroid* DestroyedAsteroid = Cast<AProjectileAsteroid>(DestroyedActor))
     {
+        TotalScore += DestroyedAsteroid->GetScoreValue();
+        ScoreValue = TotalScore;
+        SetScoreDisplay(ScoreValue);
         DestroyedAsteroid->DestroyProjectile();
 
         if (--TargetAsteroids == 0)
@@ -74,7 +99,7 @@ void AAsteroidsGameModeBase::HandleGameStart()
     PlayerRocket = Cast<ARocketPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
     //RocketPlayerControllerRef = Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));
 
-    //GameStart();
+    GameStart();
 
     /*if (RocketPlayerControllerRef)
     {
