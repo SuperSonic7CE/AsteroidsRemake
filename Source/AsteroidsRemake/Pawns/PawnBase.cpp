@@ -7,6 +7,8 @@ Steven Esposito
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "AsteroidsRemake/Actors/ProjectilePlayerBullet.h"
+#include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
+#include "AsteroidsRemake/GameModes/AsteroidsGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -24,22 +26,38 @@ APawnBase::APawnBase()
 	SpawnPointComp = CreateDefaultSubobject<USceneComponent>(TEXT("Spawn Point"));
 	SpawnPointComp->SetupAttachment(MeshComp);
 
-	OnActorBeginOverlap.AddDynamic(this, &APawnBase::OnOverlapBegin);
-}
+	HitBoxComp->SetGenerateOverlapEvents(true);
+	OnActorBeginOverlap.AddDynamic(this, &APawnBase::OnActorOverlapBegin);
+
+	GameModeRef = Cast<AAsteroidsGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+};
 
 void APawnBase::PawnDefeated()
 {
-	DestroyPawn();
+	if (GameModeRef)
+	{
+		GameModeRef->ActorDestroyed(this);
+	}
+
+	
+	//DestroyPawn();
 }
 
 void APawnBase::DestroyPawn()
 {
-	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
-	UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
+	//UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
+	//UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
+
+	Destroy();
 }
 
 void APawnBase::Fire()
 {
+	if (!bIsPlayerAlive)
+	{
+		return;
+	}
+
 	//UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
 
 	if (PlayerBulletClass)
@@ -58,7 +76,23 @@ void APawnBase::Fire()
 	}
 }
 
-void APawnBase::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
+void APawnBase::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Error, TEXT("Overlapped!"));	
+	UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
+
+	if (Cast<AProjectileAsteroid>(OtherActor))
+	{
+		PawnDefeated();
+		//Destroy();
+	}
+}
+
+bool APawnBase::GetIsPlayerAlive()
+{
+	return bIsPlayerAlive;
+}
+
+void APawnBase::SetIsPlayerAlive(bool IsAlive)
+{
+	bIsPlayerAlive = IsAlive;
 }

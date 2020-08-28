@@ -30,8 +30,6 @@ public:
 
 	virtual void DestroyPawn() override;
 
-	bool GetIsPlayerAlive();
-
 
 private:
 
@@ -53,8 +51,6 @@ private:
 
 	//APlayerController* PlayerControllerRef;
 	//FHitResult TraceHitResult;
-
-	bool bIsPlayerAlive = true;
 
 	void CalculateMoveInput(float Value);
 	void CalculateRotateInput(float Value);

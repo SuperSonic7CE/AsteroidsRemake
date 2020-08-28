@@ -13,6 +13,7 @@ class UBoxComponent;
 //class UHealthComponent;
 class AProjectileBase;
 class AProjectilePlayerBullet;
+class AAsteroidsGameModeBase;
 
 UCLASS()
 class ASTEROIDSREMAKE_API APawnBase : public APawn
@@ -23,6 +24,7 @@ private:
 
 	AProjectileBase* TempPlayerBullet;
 	TArray<AActor*> PlayerBulletActors;
+	AAsteroidsGameModeBase* GameModeRef;
 
 protected:
 
@@ -56,7 +58,11 @@ public:
 	void PawnDefeated();
 	virtual void DestroyPawn();
 
+	bool GetIsPlayerAlive();
+	void SetIsPlayerAlive(bool IsAlive);
+	bool bIsPlayerAlive = true;
+
 	UFUNCTION()
-		void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+		void OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
 };

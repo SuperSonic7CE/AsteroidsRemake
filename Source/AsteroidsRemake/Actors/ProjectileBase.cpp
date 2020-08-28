@@ -11,6 +11,7 @@ Steven Esposito
 #include "Particles/ParticleSystemComponent.h"
 #include "Math/Vector.h"
 #include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
+#include "AsteroidsRemake/GameModes/AsteroidsGameModeBase.h"
 
 // Sets default values
 AProjectileBase::AProjectileBase()
@@ -18,25 +19,12 @@ AProjectileBase::AProjectileBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projecile Mesh"));
-	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
-	RootComponent = ProjectileMesh;
+	//ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Projecile Mesh"));
+	//ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectileBase::OnHit);
+	//RootComponent = ProjectileMesh;
 
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
-
-	ProjectileMesh->SetEnableGravity(false);
-	
-	/*RandomRotationVector = FVector(FMath::RandRange(-1, 1), FMath::RandRange(-1, 1), 0);
-	
-	if (bRandomInitialRotation)
-	{
-		ProjectileMovement->Velocity *= RandomRotationVector;
-	}*/
-	
-	/*RandomRotationVector = FVector(FMath::RandRange(-1, 1), FMath::RandRange(-1, 1), 0);
-
-	ProjectileMovement->Velocity = RandomRotationVector;*/
-
+			
 	ProjectileMovement->InitialSpeed = MovementSpeed;
 	ProjectileMovement->MaxSpeed = MovementSpeed;
 	ProjectileMovement->ProjectileGravityScale = GravityScale;
@@ -48,6 +36,8 @@ AProjectileBase::AProjectileBase()
 	//ParticleTrail->SetupAttachment(RootComponent);
 
 	InitialLifeSpan = Lifespan;
+
+	GameModeRef = Cast<AAsteroidsGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 // Called when the game starts or when spawned
@@ -70,46 +60,15 @@ void AProjectileBase::BeginPlay()
 	//UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 }
 
-void AProjectileBase::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectileBase::HandleDestruction(FVector RightVector)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Projectile hit!"));
-
-	//AActor* MyOwner = GetOwner();
-
-	//if (!MyOwner)
-	//{
-		//return;
-	//}
-
-	if (OtherActor && OtherActor != this)
+	if (GameModeRef)
 	{
-		//if (OtherActor != MyOwner) //&& (!Cast<AProjectileAsteroid>(OtherActor) || !Cast<AProjectileAsteroid>(this)))
-		if (!Cast<AProjectileAsteroid>(OtherActor) || !Cast<AProjectileAsteroid>(this))
-		{
-			//UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, DamageType);
-			//UGameplayStatics::SpawnEmitterAtLocation(this, HitParticle, GetActorLocation());
-			//UGameplayStatics::PlaySoundAtLocation(this, HitSound, GetActorLocation());
-			//GetWorld()->GetFirstPlayerController()->ClientPlayCameraShake(HitShake);
-			
-			//ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-			
-			DestroyProjectile(OtherActor->GetActorRightVector());
-		}
-		//else
-		//{
-		//	FVector TempVector = GetActorForwardVector();
-		//	UE_LOG(LogTemp, Warning, TEXT("Forward Vector X: %f Y: %f Z: %f"), TempVector.X, TempVector.Y, TempVector.Z);
-		//	
-		//	TempVector = TempVector.MirrorByVector(Hit.ImpactNormal);
-		//	UE_LOG(LogTemp, Warning, TEXT("Mirrored Forward Vector X: %f Y: %f Z: %f"), TempVector.X, TempVector.Y, TempVector.Z);
-		//	//SetActorRotation(TempVector.Rotation());
-		//	//SetActorLocation(FVector(GetActorForwardVector().X, GetActorForwardVector().Y + 1, GetActorForwardVector().Z));
-		//	//UE_LOG(LogTmep, Warning, TEXT("Speed: %f"), ProjectileMovement->Set)
-		//}		
+		GameModeRef->ActorDestroyed(this);
 	}
 }
 
-void AProjectileBase::DestroyProjectile(FVector RightVector)
+void AProjectileBase::DestroyProjectile()
 {
 	Destroy();
 }

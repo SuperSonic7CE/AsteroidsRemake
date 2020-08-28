@@ -88,15 +88,11 @@ void ARocketPawn::Rotate()
 
 void ARocketPawn::DestroyPawn()
 {
-	Super::DestroyPawn();
-
-	bIsPlayerAlive = false;
+	SetIsPlayerAlive(false);
 
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
+
+	//Super::DestroyPawn();
 }
 
-bool ARocketPawn::GetIsPlayerAlive()
-{
-	return bIsPlayerAlive;
-}

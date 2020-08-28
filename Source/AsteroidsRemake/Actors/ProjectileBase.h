@@ -10,6 +10,7 @@ Steven Esposito
 #include "ProjectileBase.generated.h"
 
 class UProjectileMovementComponent;
+class AAsteroidsGameModeBase;
 
 UCLASS()
 class ASTEROIDSREMAKE_API AProjectileBase : public AActor
@@ -20,7 +21,12 @@ public:
 	// Sets default values for this actor's properties
 	AProjectileBase();
 
-private:
+	virtual void HandleDestruction(FVector RightVector);
+	virtual void DestroyProjectile();
+
+	AAsteroidsGameModeBase* GameModeRef;
+
+protected:
 	/** COMPONENTS */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		UProjectileMovementComponent* ProjectileMovement;
@@ -58,17 +64,10 @@ private:
 		USoundBase* LaunchSound;
 	//UPROPERTY(EditAnywhere, Category = "Effects")
 		//TSubclassOf<UCameraShake> HitShake;
-
-	/** FUNCTIONS */
-	UFUNCTION()
-		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-protected:
+		
 	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	virtual void DestroyProjectile(FVector RightVector);
 
 	//FVector RandomRotationVector;
 };
