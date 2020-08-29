@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/25/2020
+8/29/2020
 */
 
 #pragma once
@@ -16,13 +16,14 @@ class ASTEROIDSREMAKE_API AAsteroidSpawner : public ATargetPoint
 {
 	GENERATED_BODY()
 	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectileBase> ProjectileClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawner", meta = (AllowPrivateAccess = "true"))
-		bool bSpawnOnBeginPlay = true;
+		bool bSpawnOnBeginPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner", meta = (AllowPrivateAccess = "true"))
-		bool bRandomInitialRotation = true;
+		bool bRandomInitialRotation;
 
 	UFUNCTION()
 		void SpawnProjectile();
@@ -31,8 +32,8 @@ public:
 	UFUNCTION()
 		void SetProjectile(TSubclassOf<AProjectileBase> NewProjectile);
 
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	AProjectileBase* TempProjectile;

@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/25/2020
+8/29/2020
 */
 
 #pragma once
@@ -16,6 +16,7 @@ class ASTEROIDSREMAKE_API AProjectileAsteroid : public AProjectileBase
 {
 	GENERATED_BODY()
 	
+
 public:
 
 	AProjectileAsteroid();
@@ -23,12 +24,10 @@ public:
 	int GetScoreValue();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Score")
-		int ScoreValue;
+		int TypeOfAsteroid;
 
 	virtual void HandleDestruction(FVector RightVector) override;
 
-	UPROPERTY(EditAnywhere, Category = "Effects")
-		UParticleSystem* DeathParticle;
 
 private:
 
@@ -39,15 +38,20 @@ private:
 
 	AProjectileBase* TempSpawnedProjectile;
 
+
 protected:
 
-	//virtual void DestroyProjectile(FVector RightVector) override;
-
-	/** FUNCTIONS */
+	/** Functions */
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+	virtual void BeginPlay() override;
+
+	/** Effects */
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		USoundBase* ExplosionSFX;
+	UPROPERTY(EditAnywhere, Category = "Effects")
+		UParticleSystem* DeathParticle;
 
+	int ScoreValue;
 };

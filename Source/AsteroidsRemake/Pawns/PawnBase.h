@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #pragma once
@@ -39,7 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectileBase> PlayerBulletClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
-		int PlayerBulletMaxCount = 4;
+		int PlayerBulletMaxCount;
 
 	/** Effects */
 	UPROPERTY(EditAnywhere, Category = "Effects")
@@ -69,5 +69,5 @@ public:
 	void SetIsPlayerAlive(bool IsAlive);
 	bool GetIsPlayerAlive();
 	
-	bool bIsPlayerAlive = true;
+	bool bIsPlayerAlive;
 };

@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #pragma once
@@ -16,30 +16,51 @@ class ASTEROIDSREMAKE_API AAsteroidsGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
+
 private:
 
+    AAsteroidsGameModeBase();
+
     ARocketPawn* PlayerRocket;
-    int32 TargetAsteroids = 0;
+    int32 TargetAsteroids;
+    int32 TotalScore;
+    UAudioComponent* CurrentBackgroundAudio;
 
     int32 GetTargetAsteroidsCount();
     void HandleGameStart();
     void HandleGameOver(bool PlayerWon);
+    void StopBackgroundAudio(float StopDelay);
 
-    //virtual void Tick(float DeltaSeconds) override;
+    virtual void Tick(float DeltaSeconds) override;
+
 
 public:
 
     void ActorDestroyed(AActor* DestroyedActor);
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Point Values")
+        int32 BigAsteroidPoints;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Point Values")
+        int32 MediumAsteroidPoints;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Point Values")
+        int32 SmallAsteroidPoints;
+
+    UFUNCTION()
+        int32 GetBigAsteroidPoints();
+    UFUNCTION()
+        int32 GetMediumAsteroidPoints();
+    UFUNCTION()
+        int32 GetSmallAsteroidPoints();
+
+
 protected:
-
-    int ReviveDelay = 3;
-    int32 TotalScore = 0;
-
+    
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
-        int32 ScoreValue = 0;
+        float ReviveDelay;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
-        int32 PlayerLives = 3;
+        int32 ScoreValue;
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Game Loop")
+        int32 PlayerLives;
 
     virtual void BeginPlay() override;
 

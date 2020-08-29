@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #pragma once
@@ -19,7 +19,7 @@ public:
 	ARocketPawn();
 
 	void RevivePlayer();
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void DestroyPawn() override;
 
@@ -55,6 +55,7 @@ private:
 	void CalculateRotateInput(float Value);
 	void Move();
 	void Rotate();
+	void MoveThruster(float DeltaSeconds);
 
 protected:
 

@@ -1,46 +1,47 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #include "AsteroidsGameModeBase.h"
 #include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
 #include "AsteroidsRemake/Pawns/RocketPawn.h"
+#include "Components/AudioComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+AAsteroidsGameModeBase::AAsteroidsGameModeBase()
+{
+    PrimaryActorTick.bCanEverTick = true;
+}
 
 void AAsteroidsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    PrimaryActorTick.bCanEverTick = false;
+    CurrentBackgroundAudio = UGameplayStatics::SpawnSound2D(this, BackgroundAudio);
 
-    UGameplayStatics::PlaySound2D(this, BackgroundAudio);
     HandleGameStart();
 }
 
-//void AAsteroidsGameModeBase::Tick(float DeltaSeconds)
-//{
-//    Super::Tick(DeltaSeconds);
-//
-//    UE_LOG(LogTemp, Error, TEXT("Tick is working."));
-//
-//    if (ScoreValue < TotalScore)
-//    {
-//        SetScoreDisplay(++ScoreValue);
-//    }
-//    else if (ScoreValue > TotalScore)
-//    {
-//        ScoreValue = TotalScore;
-//        SetScoreDisplay(ScoreValue);
-//    }
-//}
+void AAsteroidsGameModeBase::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+
+    // Counts up to displaying TotalScore.
+    if (ScoreValue < TotalScore)
+    {
+        ScoreValue += 5;
+        SetScoreDisplay(ScoreValue);
+    }
+}
 
 void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
 {
     if (DestroyedActor == PlayerRocket)
     {
         PlayerRocket->DestroyPawn();
-                
+
+        // Instantly sets score when player is hit.
         SetLivesDisplay(--PlayerLives);
         TotalScore -= 1000;
         ScoreValue = TotalScore;
@@ -60,12 +61,15 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
     }
     else if (AProjectileAsteroid* DestroyedAsteroid = Cast<AProjectileAsteroid>(DestroyedActor))
     {
+        if (!TargetAsteroids)
+        {
+            TargetAsteroids = GetTargetAsteroidsCount();
+        }
+
         TotalScore += DestroyedAsteroid->GetScoreValue();
-        ScoreValue = TotalScore;
-        SetScoreDisplay(ScoreValue);
         DestroyedAsteroid->DestroyProjectile();
 
-        if (--TargetAsteroids == 0)
+        if (--TargetAsteroids <= 0)
         {
             HandleGameOver(true);
         }
@@ -74,6 +78,7 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
 
 void AAsteroidsGameModeBase::HandleGameStart()
 {
+    TotalScore = 0;
     TargetAsteroids = GetTargetAsteroidsCount();
     PlayerRocket = Cast<ARocketPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
 
@@ -95,19 +100,19 @@ int32 AAsteroidsGameModeBase::GetTargetAsteroidsCount()
     {
         int TempScore = Cast<AProjectileAsteroid>(AsteroidActors[i])->GetScoreValue();
 
-        /* 100 points = Big Asteroid = 7 total asteroids to destroy 
-           200 points = Medium Asteroid = 3 total asteroids to destroy 
-           300 points = Small Asteroid = 1 asteroid to destroy
+        /* Big Asteroid = 7 total asteroids to destroy 
+           Medium Asteroid = 3 total asteroids to destroy 
+           Small Asteroid = 1 asteroid to destroy
         */
-        if (TempScore == 100)
+        if (TempScore == BigAsteroidPoints)
         {
             TempCount += 7;
         }
-        else if (TempScore == 200)
+        else if (TempScore == MediumAsteroidPoints)
         {
             TempCount += 3;
         }
-        else if (TempScore == 300)
+        else if (TempScore == SmallAsteroidPoints)
         {
             TempCount++;
         }
@@ -115,4 +120,28 @@ int32 AAsteroidsGameModeBase::GetTargetAsteroidsCount()
 
     //UE_LOG(LogTemp, Warning, TEXT("Number of Asteroid Targets: %i"), TempCount);
     return TempCount;
+}
+
+#pragma region Point Values
+
+int32 AAsteroidsGameModeBase::GetBigAsteroidPoints()
+{
+    return BigAsteroidPoints;
+}
+
+int32 AAsteroidsGameModeBase::GetMediumAsteroidPoints()
+{
+    return MediumAsteroidPoints;
+}
+
+int32 AAsteroidsGameModeBase::GetSmallAsteroidPoints()
+{
+    return SmallAsteroidPoints;
+}
+
+#pragma endregion
+
+void AAsteroidsGameModeBase::StopBackgroundAudio(float StopDelay)
+{
+    CurrentBackgroundAudio->StopDelayed(StopDelay);
 }

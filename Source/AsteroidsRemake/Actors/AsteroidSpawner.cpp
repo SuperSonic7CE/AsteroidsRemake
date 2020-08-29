@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/25/2020
+8/29/2020
 */
 
 
@@ -9,6 +9,8 @@ Steven Esposito
 
 void AAsteroidSpawner::BeginPlay()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	if (bSpawnOnBeginPlay)
 	{
 		SpawnProjectile();

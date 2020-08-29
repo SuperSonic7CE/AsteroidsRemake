@@ -1,12 +1,14 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #include "BoundsTriggerBox.h"
 
 ABoundsTriggerBox::ABoundsTriggerBox()
 {
+	PrimaryActorTick.bCanEverTick = false;
+
 	OnActorBeginOverlap.AddDynamic(this, &ABoundsTriggerBox::OnOverlapBegin);
 }
 
@@ -14,7 +16,7 @@ void ABoundsTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherAct
 {
 	if (!TargetTriggerBox)
 	{
-		UE_LOG(LogTemp, Error, TEXT("TargetTriggerBox not set!"));
+		UE_LOG(LogTemp, Error, TEXT("TargetTriggerBox not set! for %s!"), *this->GetName());
 		return;
 	}
 

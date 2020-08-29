@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #pragma once
@@ -27,9 +27,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Target", meta = (AllowPrivateAccess = "true"))
 		ABoundsTriggerBox* TargetTriggerBox;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Target", meta = (AllowPrivateAccess = "true"))
-		int XOffset = 0;
+		int XOffset;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Target", meta = (AllowPrivateAccess = "true"))
-		int YOffset = 0;
+		int YOffset;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Target", meta = (AllowPrivateAccess = "true"))
-		bool TeleportOtherActor = true;
+		bool TeleportOtherActor;
 };

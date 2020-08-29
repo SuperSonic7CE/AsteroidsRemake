@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #include "RocketPawn.h"
@@ -23,7 +23,6 @@ ARocketPawn::ARocketPawn()
 	ThrusterMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Thruster Mesh"));
 	ThrusterMeshComp->SetupAttachment(MeshComp);
 	ThrusterMeshComp->SetVisibility(false);
-	InitialThrusterZ = ThrusterMeshComp->GetRelativeLocation().X;
 }
 
 void ARocketPawn::BeginPlay()
@@ -32,22 +31,14 @@ void ARocketPawn::BeginPlay()
 
 	RespawnLocation = GetActorLocation();
 	RespawnRotation = GetActorRotation();
+	InitialThrusterZ = ThrusterMeshComp->GetRelativeLocation().X;
 }
 
-void ARocketPawn::Tick(float DeltaTime)
+void ARocketPawn::Tick(float DeltaSeconds)
 {
-	Super::Tick(DeltaTime);
-
-	if (ThrusterMeshComp->IsVisible())
-	{
-		NewThrusterLocation = ThrusterMeshComp->GetRelativeLocation();
-
-		NewThrusterLocation.Z = ThrusterLocationOffset + ThrusterAmplitudeOffset * FMath::Sin(ThrusterPeriodOffset * RunningTime);
-		
-		ThrusterMeshComp->SetRelativeLocation(NewThrusterLocation);
-		RunningTime += DeltaTime;
-	}
-
+	Super::Tick(DeltaSeconds);
+	
+	MoveThruster(DeltaSeconds);
 	Rotate();
 	Move();
 }
@@ -60,6 +51,8 @@ void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("Turn", this, &ARocketPawn::CalculateRotateInput);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ARocketPawn::Fire);
 }
+
+#pragma region Movement and Rotation
 
 void ARocketPawn::CalculateMoveInput(float Value)
 {
@@ -88,6 +81,20 @@ void ARocketPawn::CalculateRotateInput(float Value)
 	RotationDirection = FQuat(Rotation);
 }
 
+// Pulsate thruster up and down to create the illusion of fire.
+void ARocketPawn::MoveThruster(float DeltaSeconds)
+{
+	if (ThrusterMeshComp->IsVisible())
+	{
+		NewThrusterLocation = ThrusterMeshComp->GetRelativeLocation();
+
+		NewThrusterLocation.Z = ThrusterLocationOffset + ThrusterAmplitudeOffset * FMath::Sin(ThrusterPeriodOffset * RunningTime);
+
+		ThrusterMeshComp->SetRelativeLocation(NewThrusterLocation);
+		RunningTime += DeltaSeconds;
+	}
+}
+
 void ARocketPawn::Move()
 {
 	SetActorLocation(GetActorLocation() + MoveDirection);
@@ -97,6 +104,10 @@ void ARocketPawn::Rotate()
 {
 	AddActorLocalRotation(RotationDirection, true);
 }
+
+#pragma endregion
+
+#pragma region Destruction and Respawning
 
 void ARocketPawn::DestroyPawn()
 {
@@ -127,3 +138,5 @@ void ARocketPawn::TurnOffInvincibility()
 	FadeIn();
 	SetActorEnableCollision(true);
 }
+
+#pragma endregion

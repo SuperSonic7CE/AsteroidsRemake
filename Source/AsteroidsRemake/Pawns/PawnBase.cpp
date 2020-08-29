@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/28/2020
+8/29/2020
 */
 
 #include "PawnBase.h"
@@ -28,13 +28,15 @@ APawnBase::APawnBase()
 	OnActorBeginOverlap.AddDynamic(this, &APawnBase::OnActorOverlapBegin);
 
 	GameModeRef = Cast<AAsteroidsGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+
+	bIsPlayerAlive = true;
 };
 
 void APawnBase::PawnDefeated()
 {
 	if (!GameModeRef)
 	{
-		UE_LOG(LogTemp, Error, TEXT("GameModeRef not set!"));
+		UE_LOG(LogTemp, Error, TEXT("GameModeRef not set for %s!"), *this->GetName());
 		return;		
 	}
 	
@@ -58,7 +60,7 @@ void APawnBase::Fire()
 
 	if (!PlayerBulletClass)
 	{
-		UE_LOG(LogTemp, Error, TEXT("PlayerBulletClass not set!"));
+		UE_LOG(LogTemp, Error, TEXT("PlayerBulletClass not set for %s!"), *this->GetName());
 		return;
 	}
 
