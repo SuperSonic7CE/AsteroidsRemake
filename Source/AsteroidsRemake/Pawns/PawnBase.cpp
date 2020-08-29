@@ -1,21 +1,20 @@
 /*
 Steven Esposito
-8/25/2020
+8/28/2020
 */
 
 #include "PawnBase.h"
-#include "Components/BoxComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "AsteroidsRemake/Actors/ProjectilePlayerBullet.h"
 #include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
 #include "AsteroidsRemake/GameModes/AsteroidsGameModeBase.h"
+#include "Components/BoxComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APawnBase::APawnBase()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	HitBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 	RootComponent = HitBoxComp;
@@ -36,18 +35,18 @@ void APawnBase::PawnDefeated()
 {
 	if (GameModeRef)
 	{
-		GameModeRef->ActorDestroyed(this);
+		UE_LOG(LogTemp, Error, TEXT("GameModeRef not set!"));
+		return;		
 	}
+	
+	GameModeRef->ActorDestroyed(this);
 
 	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSFX, GetActorLocation());
 	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
-	//DestroyPawn();
 }
 
 void APawnBase::DestroyPawn()
-{	
-	//UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
-
+{
 	Destroy();
 }
 
@@ -58,33 +57,30 @@ void APawnBase::Fire()
 		return;
 	}
 
-	//UE_LOG(LogTemp, Warning, TEXT("FIRE!"));
-
-	if (PlayerBulletClass)
+	if (!PlayerBulletClass)
 	{
-		//TArray<AActor*> ProjectileActors;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AProjectilePlayerBullet::StaticClass(), PlayerBulletActors);
+		UE_LOG(LogTemp, Error, TEXT("PlayerBulletClass not set!"));
+		return;
+	}
 
-		if (PlayerBulletActors.Num() < PlayerBulletMaxCount)
-		{
-			FVector SpawnLocation = SpawnPointComp->GetComponentLocation();
-			FRotator SpawnRotation = SpawnPointComp->GetComponentRotation();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AProjectilePlayerBullet::StaticClass(), PlayerBulletActors);
 
-			TempPlayerBullet = GetWorld()->SpawnActor<AProjectileBase>(PlayerBulletClass, SpawnLocation, SpawnRotation);
-			TempPlayerBullet->SetOwner(this);
-			UGameplayStatics::PlaySoundAtLocation(this, LaserSFX, SpawnLocation);
-		}
+	if (PlayerBulletActors.Num() < PlayerBulletMaxCount)
+	{
+		ProjectileSpawnLocation = SpawnPointComp->GetComponentLocation();
+		ProjectileSpawnRotation = SpawnPointComp->GetComponentRotation();
+
+		TempPlayerBullet = GetWorld()->SpawnActor<AProjectileBase>(PlayerBulletClass, ProjectileSpawnLocation, ProjectileSpawnRotation);
+		TempPlayerBullet->SetOwner(this);
+		UGameplayStatics::PlaySoundAtLocation(this, LaserSFX, ProjectileSpawnLocation);
 	}
 }
 
 void APawnBase::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	//UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
-
 	if (Cast<AProjectileAsteroid>(OtherActor))
 	{
 		PawnDefeated();
-		//Destroy();
 	}
 }
 

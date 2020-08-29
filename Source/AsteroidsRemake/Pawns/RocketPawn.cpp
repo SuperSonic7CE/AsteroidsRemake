@@ -1,41 +1,37 @@
 /*
 Steven Esposito
-8/21/2020
+8/28/2020
 */
 
 #include "RocketPawn.h"
+#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Math/UnrealMathUtility.h"
-#include "Components/BoxComponent.h"
-//#include "Camera/CameraComponent.h"
 
 ARocketPawn::ARocketPawn()
 {
-	//Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-
 	MoveSpeed = 200.0f;
 	FrictionAmount = 0.5f;
 	RotateSpeed = 50.0f;
 	CurrentSpeed = 0.0f;
+	InvincibilityDelay = 2.0f;
+	ThrusterLocationOffset = -65.0f;
+	ThrusterAmplitudeOffset = 10.0f;
+	ThrusterPeriodOffset = 10.0f;
+	RunningTime = 0.0f;
 
 	ThrusterMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Thruster Mesh"));
 	ThrusterMeshComp->SetupAttachment(MeshComp);
 	ThrusterMeshComp->SetVisibility(false);
 	InitialThrusterZ = ThrusterMeshComp->GetRelativeLocation().X;
-	ThrusterLocationOffset = -65.0f;
-	ThrusterAmplitudeOffset = 10.0f;
-	ThrusterPeriodOffset = 10.0f;
-	RunningTime = 0.0f;
 }
 
 void ARocketPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SpawnLocation = GetActorLocation();
-	SpawnRotation = GetActorRotation();
-
-	//PlayerControllerRef = Cast<APlayerController>(GetController());
+	RespawnLocation = GetActorLocation();
+	RespawnRotation = GetActorRotation();
 }
 
 void ARocketPawn::Tick(float DeltaTime)
@@ -44,9 +40,8 @@ void ARocketPawn::Tick(float DeltaTime)
 
 	if (ThrusterMeshComp->IsVisible())
 	{
-		FVector NewThrusterLocation = ThrusterMeshComp->GetRelativeLocation();
+		NewThrusterLocation = ThrusterMeshComp->GetRelativeLocation();
 
-		//NewLocation.Z += FMath::Sin(RunningTime);
 		NewThrusterLocation.Z = ThrusterLocationOffset + ThrusterAmplitudeOffset * FMath::Sin(ThrusterPeriodOffset * RunningTime);
 		
 		ThrusterMeshComp->SetRelativeLocation(NewThrusterLocation);
@@ -55,8 +50,6 @@ void ARocketPawn::Tick(float DeltaTime)
 
 	Rotate();
 	Move();
-
-	//UE_LOG(LogTemp, Warning, TEXT("Forward Vector: %f, %f, %f"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
 }
 
 void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -66,7 +59,6 @@ void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	PlayerInputComponent->BindAxis("MoveForward", this, &ARocketPawn::CalculateMoveInput);
 	PlayerInputComponent->BindAxis("Turn", this, &ARocketPawn::CalculateRotateInput);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ARocketPawn::Fire);
-	//PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ARocketPawn::Fire);
 }
 
 void ARocketPawn::CalculateMoveInput(float Value)
@@ -87,8 +79,6 @@ void ARocketPawn::CalculateMoveInput(float Value)
 	}
 
 	MoveDirection = PreviousForward * Value * CurrentSpeed * GetWorld()->DeltaTimeSeconds;
-
-	//UE_LOG(LogTemp, Warning, TEXT("%f, %f, %f"), MoveDirection.X, MoveDirection.Y, MoveDirection.Z);
 }
 
 void ARocketPawn::CalculateRotateInput(float Value)
@@ -101,29 +91,20 @@ void ARocketPawn::CalculateRotateInput(float Value)
 void ARocketPawn::Move()
 {
 	SetActorLocation(GetActorLocation() + MoveDirection);
-	//MeshComp->AddForce(MoveDirection * MoveSpeed * MeshComp->GetMass());
 }
 
 void ARocketPawn::Rotate()
 {
 	AddActorLocalRotation(RotationDirection, true);
-	/*FVector TempVector = GetActorForwardVector();
-	UE_LOG(LogTemp, Warning, TEXT("Forward Vector X: %f Y: %f Z: %f"), TempVector.X, TempVector.Y, TempVector.Z);*/
-	//MeshComp->AddTorque(FVector(0.0f, 0.0f, 1.0f) * RotateSpeed * MeshComp->GetMass());
 }
 
 void ARocketPawn::DestroyPawn()
 {
 	SetActorEnableCollision(false);
-	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetIsPlayerAlive(false);
-
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
-
 	FadeOut();
-
-	//Super::DestroyPawn();
 }
 
 void ARocketPawn::RevivePlayer()
@@ -133,8 +114,8 @@ void ARocketPawn::RevivePlayer()
 
 	GetWorld()->GetTimerManager().SetTimer(PlayerInvincibilityHandle, PlayerInvincibilityDelegate, InvincibilityDelay, false);
 
-	SetActorLocation(SpawnLocation);
-	SetActorRotation(SpawnRotation);
+	SetActorLocation(RespawnLocation);
+	SetActorRotation(RespawnRotation);
 	
 	SetActorHiddenInGame(false);
 	SetActorTickEnabled(true);
@@ -144,6 +125,5 @@ void ARocketPawn::RevivePlayer()
 void ARocketPawn::TurnOffInvincibility()
 {
 	FadeIn();
-	SetActorEnableCollision(true);	
-	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled:: );
+	SetActorEnableCollision(true);
 }

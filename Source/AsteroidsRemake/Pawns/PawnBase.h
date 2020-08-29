@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/25/2020
+8/28/2020
 */
 
 #pragma once
@@ -10,7 +10,6 @@ Steven Esposito
 #include "PawnBase.generated.h"
 
 class UBoxComponent;
-//class UHealthComponent;
 class AProjectileBase;
 class AProjectilePlayerBullet;
 class AAsteroidsGameModeBase;
@@ -20,11 +19,13 @@ class ASTEROIDSREMAKE_API APawnBase : public APawn
 {
 	GENERATED_BODY()
 
+
 private:
 
 	AProjectileBase* TempPlayerBullet;
 	TArray<AActor*> PlayerBulletActors;
 	AAsteroidsGameModeBase* GameModeRef;
+
 
 protected:
 
@@ -35,8 +36,6 @@ protected:
 		UStaticMeshComponent* MeshComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 		USceneComponent* SpawnPointComp;
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-		//UHealthComponent* HealthComp;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
 		TSubclassOf<AProjectileBase> PlayerBulletClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectiles", meta = (AllowPrivateAccess = "true"))
@@ -47,25 +46,28 @@ protected:
 		UParticleSystem* DeathParticle;
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		USoundBase* ExplosionSFX;
-
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		USoundBase* LaserSFX;
 
+	/** Functions */
 	UFUNCTION()
 		void Fire();
 
+	FVector ProjectileSpawnLocation;
+	FRotator ProjectileSpawnRotation;
+
+
 public:
-	// Sets default values for this pawn's properties
+
 	APawnBase();
-
-	void PawnDefeated();
-	virtual void DestroyPawn();
-
-	bool GetIsPlayerAlive();
-	void SetIsPlayerAlive(bool IsAlive);
-	bool bIsPlayerAlive = true;
 
 	UFUNCTION()
 		void OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
+	void PawnDefeated();
+	virtual void DestroyPawn();
+	void SetIsPlayerAlive(bool IsAlive);
+	bool GetIsPlayerAlive();
+	
+	bool bIsPlayerAlive = true;
 };

@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/21/2020
+8/28/2020
 */
 
 #pragma once
@@ -9,12 +9,6 @@ Steven Esposito
 #include "PawnBase.h"
 #include "RocketPawn.generated.h"
 
-
-//class UCameraComponent;
-
-/**
- * 
- */
 UCLASS()
 class ASTEROIDSREMAKE_API ARocketPawn : public APawnBase
 {
@@ -25,18 +19,12 @@ public:
 	ARocketPawn();
 
 	void RevivePlayer();
-
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void DestroyPawn() override;
 
 
 private:
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
-	//	UCameraComponent* Camera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float MoveSpeed;
@@ -54,20 +42,17 @@ private:
 	float ThrusterAmplitudeOffset;
 	float ThrusterPeriodOffset;
 	float RunningTime;
+	float InvincibilityDelay;
 
 	FVector MoveDirection;
 	FVector PreviousForward;
 	FQuat RotationDirection;
-
-	FVector SpawnLocation;
-	FRotator SpawnRotation;
-
-	//APlayerController* PlayerControllerRef;
-	//FHitResult TraceHitResult;
+	FVector RespawnLocation;
+	FRotator RespawnRotation;
+	FVector NewThrusterLocation;
 
 	void CalculateMoveInput(float Value);
 	void CalculateRotateInput(float Value);
-
 	void Move();
 	void Rotate();
 
@@ -81,6 +66,4 @@ protected:
 		void FadeIn();
 
 	void TurnOffInvincibility();
-
-	int InvincibilityDelay = 2;
 };

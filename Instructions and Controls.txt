@@ -1,0 +1,6 @@
+Instructions: Destroy all the asteroids without losing all your lives. Losing a life subtracts 1000 points from your score. Big asteroids are worth 100 points, medium asteroids are worth 200 points, and small asteroids are worth 300 points.
+
+CONTROLS:
+Move Left/Right: A and D keys, Left and Right keys, D-Pad Left and Right buttons, or Left Thumbstick X Axis
+Move Forward: W key, Up key, D-Pad Up button, or Left Thumbstick Y Axis
+Fire Laser: Spacebar, or Left, Right, Top, or Bottom gamepad face buttons
