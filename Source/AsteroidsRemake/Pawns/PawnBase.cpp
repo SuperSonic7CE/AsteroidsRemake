@@ -14,7 +14,7 @@ Steven Esposito
 // Sets default values
 APawnBase::APawnBase()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	HitBoxComp = CreateDefaultSubobject<UBoxComponent>(TEXT("Box Collider"));
 	RootComponent = HitBoxComp;
@@ -33,7 +33,7 @@ APawnBase::APawnBase()
 
 void APawnBase::PawnDefeated()
 {
-	if (GameModeRef)
+	if (!GameModeRef)
 	{
 		UE_LOG(LogTemp, Error, TEXT("GameModeRef not set!"));
 		return;		
