@@ -45,7 +45,7 @@ void AProjectilePlayerBullet::OnActorOverlapBegin(AActor* OverlappedActor, AActo
 		return;
 	}*/
 
-	UE_LOG(LogTemp, Error, TEXT("%s overlapped with Player Bullet!"), *OtherActor->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s overlapped with Player Bullet!"), *OtherActor->GetName());
 
 	//UE_LOG(LogTemp, Warning, TEXT("Projectile hit!"));
 

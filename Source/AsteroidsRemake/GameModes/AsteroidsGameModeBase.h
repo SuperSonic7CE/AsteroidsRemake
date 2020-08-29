@@ -1,4 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+/*
+Steven Esposito
+8/28/2020
+*/
 
 #pragma once
 
@@ -7,7 +10,6 @@
 #include "AsteroidsGameModeBase.generated.h"
 
 class ARocketPawn;
-//class APlayerControllerBase;
 
 UCLASS()
 class ASTEROIDSREMAKE_API AAsteroidsGameModeBase : public AGameModeBase
@@ -18,7 +20,6 @@ private:
 
     ARocketPawn* PlayerRocket;
     int32 TargetAsteroids = 0;
-    //APlayerControllerBase* RocketPlayerControllerRef;
 
     int32 GetTargetAsteroidsCount();
     void HandleGameStart();

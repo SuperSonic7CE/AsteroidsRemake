@@ -11,7 +11,6 @@ Steven Esposito
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-// Sets default values
 APawnBase::APawnBase()
 {
 	PrimaryActorTick.bCanEverTick = true;

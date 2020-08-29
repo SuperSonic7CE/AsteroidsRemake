@@ -1,5 +1,7 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+/*
+Steven Esposito
+8/28/2020
+*/
 
 #include "AsteroidsGameModeBase.h"
 #include "AsteroidsRemake/Actors/ProjectileAsteroid.h"
@@ -10,7 +12,7 @@ void AAsteroidsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    //PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = false;
 
     UGameplayStatics::PlaySound2D(this, BackgroundAudio);
     HandleGameStart();
@@ -35,10 +37,6 @@ void AAsteroidsGameModeBase::BeginPlay()
 
 void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
 {
-    //UE_LOG(LogTemp, Warning, TEXT("A pawn died."));
-    //UE_LOG(LogTemp, Warning, TEXT("%s"), *DestroyedActor->GetName());
-    //UE_LOG(LogTemp, Warning, TEXT("%s"), *PlayerRocket->GetName());
-
     if (DestroyedActor == PlayerRocket)
     {
         PlayerRocket->DestroyPawn();
@@ -59,11 +57,6 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
 
             GetWorld()->GetTimerManager().SetTimer(PlayerReviveHandle, PlayerReviveDelegate, ReviveDelay, false);
         }
-
-        /*if (RocketPlayerControllerRef)
-        {
-            RocketPlayerControllerRef->SetPlayerEnabledState(false);
-        }*/
     }
     else if (AProjectileAsteroid* DestroyedAsteroid = Cast<AProjectileAsteroid>(DestroyedActor))
     {
@@ -77,40 +70,14 @@ void AAsteroidsGameModeBase::ActorDestroyed(AActor* DestroyedActor)
             HandleGameOver(true);
         }
     }
-
-    //else if (AProjectileBase* DestroyedProjectile = Cast<AProjectileBase>(DestroyedActor))
-    //{
-    //    DestroyedProjectile = Cast<AProjectileAsteroid>(DestroyedActor);
-
-    //    if (DestroyedProjectile)
-    //    {
-    //        if (--TargetAsteroids == 0)
-    //        {
-    //            HandleGameOver(true);
-    //        }
-    //    }
-
-    //    //DestroyedProjectile->DestroyProjectile();
-    //}
 }
 
 void AAsteroidsGameModeBase::HandleGameStart()
 {
     TargetAsteroids = GetTargetAsteroidsCount();
     PlayerRocket = Cast<ARocketPawn>(UGameplayStatics::GetPlayerPawn(this, 0));
-    //RocketPlayerControllerRef = Cast<APlayerControllerBase>(UGameplayStatics::GetPlayerController(this, 0));
 
     GameStart();
-
-    /*if (RocketPlayerControllerRef)
-    {
-        RocketPlayerControllerRef->SetPlayerEnabledState(false);
-
-        FTimerHandle PlayerEnableHandle;
-        FTimerDelegate PlayerEnableDelegate = FTimerDelegate::CreateUObject(RocketPlayerControllerRef, &APlayerControllerBase::SetPlayerEnabledState, true);
-
-        GetWorld()->GetTimerManager().SetTimer(PlayerEnableHandle, PlayerEnableDelegate, StartDelay, false);
-    }*/
 }
 
 void AAsteroidsGameModeBase::HandleGameOver(bool PlayerWon)
@@ -128,6 +95,10 @@ int32 AAsteroidsGameModeBase::GetTargetAsteroidsCount()
     {
         int TempScore = Cast<AProjectileAsteroid>(AsteroidActors[i])->GetScoreValue();
 
+        /* 100 points = Big Asteroid = 7 total asteroids to destroy 
+           200 points = Medium Asteroid = 3 total asteroids to destroy 
+           300 points = Small Asteroid = 1 asteroid to destroy
+        */
         if (TempScore == 100)
         {
             TempCount += 7;
@@ -142,6 +113,6 @@ int32 AAsteroidsGameModeBase::GetTargetAsteroidsCount()
         }
     }
 
-    UE_LOG(LogTemp, Warning, TEXT("Number of Asteroid Targets: %i"), TempCount);
+    //UE_LOG(LogTemp, Warning, TEXT("Number of Asteroid Targets: %i"), TempCount);
     return TempCount;
 }

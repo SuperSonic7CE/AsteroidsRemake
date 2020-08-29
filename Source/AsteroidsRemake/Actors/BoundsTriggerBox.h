@@ -1,6 +1,6 @@
 /*
 Steven Esposito
-8/23/2020
+8/28/2020
 */
 
 #pragma once
@@ -9,9 +9,6 @@ Steven Esposito
 #include "Engine/TriggerBox.h"
 #include "BoundsTriggerBox.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class ASTEROIDSREMAKE_API ABoundsTriggerBox : public ATriggerBox
 {
@@ -22,7 +19,7 @@ public:
 	ABoundsTriggerBox();
 
 	UFUNCTION()
-		void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
+		void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
 
 private:
 
