@@ -6,6 +6,7 @@ Steven Esposito
 
 #include "ProjectileAsteroid.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AProjectileAsteroid::AProjectileAsteroid()
 {
@@ -99,5 +100,22 @@ void AProjectileAsteroid::HandleDestruction(FVector RightVector)
 		//TempSpawnedProjectile->SetOwner(this);
 	}	
 
+	float ExplosionPitch;
+
+	if (ScoreValue == 300)
+	{
+		ExplosionPitch = 1.0f;
+	}
+	else if (ScoreValue == 200)
+	{
+		ExplosionPitch = 0.875f;
+	}
+	else if (ScoreValue == 100)
+	{
+		ExplosionPitch = 0.75f;
+	}
+		
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSFX, GetActorLocation(), 0.75f, FMath::FRandRange(ExplosionPitch - 0.05f, ExplosionPitch + 0.05f));
+	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
 	Super::HandleDestruction(RightVector);
 }

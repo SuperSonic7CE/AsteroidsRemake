@@ -39,13 +39,13 @@ void APawnBase::PawnDefeated()
 		GameModeRef->ActorDestroyed(this);
 	}
 
-	
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSFX, GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
 	//DestroyPawn();
 }
 
 void APawnBase::DestroyPawn()
-{
-	//UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
+{	
 	//UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
 
 	Destroy();
@@ -72,6 +72,7 @@ void APawnBase::Fire()
 
 			TempPlayerBullet = GetWorld()->SpawnActor<AProjectileBase>(PlayerBulletClass, SpawnLocation, SpawnRotation);
 			TempPlayerBullet->SetOwner(this);
+			UGameplayStatics::PlaySoundAtLocation(this, LaserSFX, SpawnLocation);
 		}
 	}
 }

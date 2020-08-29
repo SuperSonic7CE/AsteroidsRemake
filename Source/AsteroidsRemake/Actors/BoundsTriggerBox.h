@@ -22,7 +22,7 @@ public:
 	ABoundsTriggerBox();
 
 	UFUNCTION()
-		void OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+		void OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor);
 
 private:
 

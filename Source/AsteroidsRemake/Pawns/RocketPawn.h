@@ -45,7 +45,15 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float RotateSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* ThrusterMeshComp;
+
 	float CurrentSpeed;
+	float InitialThrusterZ;
+	float ThrusterLocationOffset;
+	float ThrusterAmplitudeOffset;
+	float ThrusterPeriodOffset;
+	float RunningTime;
 
 	FVector MoveDirection;
 	FVector PreviousForward;

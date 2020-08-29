@@ -10,8 +10,9 @@ void AAsteroidsGameModeBase::BeginPlay()
 {
     Super::BeginPlay();
 
-    PrimaryActorTick.bCanEverTick = true;
+    //PrimaryActorTick.bCanEverTick = true;
 
+    UGameplayStatics::PlaySound2D(this, BackgroundAudio);
     HandleGameStart();
 }
 

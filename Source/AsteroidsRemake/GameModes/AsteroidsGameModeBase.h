@@ -50,4 +50,7 @@ protected:
         void SetScoreDisplay(int32 ScoreDisplayValue);
     UFUNCTION(BlueprintImplementableEvent)
         void SetLivesDisplay(int32 LivesDisplayValue);
+
+    UPROPERTY(EditAnywhere, Category = "Effects")
+        USoundBase* BackgroundAudio;
 };

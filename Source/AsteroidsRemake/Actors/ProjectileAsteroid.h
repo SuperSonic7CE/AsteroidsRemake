@@ -27,6 +27,9 @@ public:
 
 	virtual void HandleDestruction(FVector RightVector) override;
 
+	UPROPERTY(EditAnywhere, Category = "Effects")
+		UParticleSystem* DeathParticle;
+
 private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn Projectile", meta = (AllowPrivateAccess = "true"))
@@ -43,5 +46,8 @@ protected:
 	/** FUNCTIONS */
 	UFUNCTION()
 		void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere, Category = "Effects")
+		USoundBase* ExplosionSFX;
 
 };

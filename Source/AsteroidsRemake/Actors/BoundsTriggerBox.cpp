@@ -7,14 +7,15 @@ Steven Esposito
 
 ABoundsTriggerBox::ABoundsTriggerBox()
 {
-	OnActorBeginOverlap.AddDynamic(this, &ABoundsTriggerBox::OnOverlapBegin);
+	OnActorEndOverlap.AddDynamic(this, &ABoundsTriggerBox::OnOverlapEnd);
 }
 
-void ABoundsTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
+void ABoundsTriggerBox::OnOverlapEnd(AActor* OverlappedActor, AActor* OtherActor)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Bounds X: %f"), GetComponentsBoundingBox().GetExtent().X);
 	//UE_LOG(LogTemp, Warning, TEXT("Size X: %f"), GetComponentsBoundingBox().GetSize().X);
 	//UE_LOG(LogTemp, Warning, TEXT("Center X: %f"), GetComponentsBoundingBox().GetCenter().X);
+	//UE_LOG(LogTemp, Warning, TEXT("Overlapped with %s"), *OtherActor->GetName());
 
 	if (!TargetTriggerBox)
 	{
@@ -24,7 +25,7 @@ void ABoundsTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherAct
 
 	if (OtherActor && OtherActor != this && TeleportOtherActor)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Overlapped with %s"), *OtherActor->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Overlapped with %s"), *OtherActor->GetName());
 
 		if (XOffset != 0)
 		{
