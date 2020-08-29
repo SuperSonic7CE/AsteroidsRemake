@@ -46,7 +46,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 		UParticleSystem* DeathParticle;
 	UPROPERTY(EditAnywhere, Category = "Effects")
-		USoundBase* DeathSFX;
+		USoundBase* ExplosionSFX;
+
+	UPROPERTY(EditAnywhere, Category = "Effects")
+		USoundBase* LaserSFX;
 
 	UFUNCTION()
 		void Fire();

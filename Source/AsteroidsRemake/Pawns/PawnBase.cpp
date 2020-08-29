@@ -39,13 +39,13 @@ void APawnBase::PawnDefeated()
 		GameModeRef->ActorDestroyed(this);
 	}
 
-	
+	UGameplayStatics::PlaySoundAtLocation(this, ExplosionSFX, GetActorLocation());
+	UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
 	//DestroyPawn();
 }
 
 void APawnBase::DestroyPawn()
-{
-	//UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation());
+{	
 	//UGameplayStatics::PlaySoundAtLocation(this, DeathSFX, GetActorLocation());
 
 	Destroy();
@@ -72,13 +72,14 @@ void APawnBase::Fire()
 
 			TempPlayerBullet = GetWorld()->SpawnActor<AProjectileBase>(PlayerBulletClass, SpawnLocation, SpawnRotation);
 			TempPlayerBullet->SetOwner(this);
+			UGameplayStatics::PlaySoundAtLocation(this, LaserSFX, SpawnLocation);
 		}
 	}
 }
 
 void APawnBase::OnActorOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
+	//UE_LOG(LogTemp, Error, TEXT("%s overlapped with Rocket!"), *OtherActor->GetName());
 
 	if (Cast<AProjectileAsteroid>(OtherActor))
 	{

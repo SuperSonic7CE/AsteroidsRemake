@@ -24,6 +24,8 @@ public:
 
 	ARocketPawn();
 
+	void RevivePlayer();
+
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -43,11 +45,22 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 		float RotateSpeed;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
+		UStaticMeshComponent* ThrusterMeshComp;
+
 	float CurrentSpeed;
+	float InitialThrusterZ;
+	float ThrusterLocationOffset;
+	float ThrusterAmplitudeOffset;
+	float ThrusterPeriodOffset;
+	float RunningTime;
 
 	FVector MoveDirection;
 	FVector PreviousForward;
 	FQuat RotationDirection;
+
+	FVector SpawnLocation;
+	FRotator SpawnRotation;
 
 	//APlayerController* PlayerControllerRef;
 	//FHitResult TraceHitResult;
@@ -58,9 +71,16 @@ private:
 	void Move();
 	void Rotate();
 
-
 protected:
 
 	virtual void BeginPlay() override;
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void FadeOut();
+	UFUNCTION(BlueprintImplementableEvent)
+		void FadeIn();
+
+	void TurnOffInvincibility();
+
+	int InvincibilityDelay = 2;
 };

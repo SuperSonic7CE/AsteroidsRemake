@@ -6,6 +6,7 @@ Steven Esposito
 #include "RocketPawn.h"
 #include "Components/StaticMeshComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Components/BoxComponent.h"
 //#include "Camera/CameraComponent.h"
 
 ARocketPawn::ARocketPawn()
@@ -16,11 +17,23 @@ ARocketPawn::ARocketPawn()
 	FrictionAmount = 0.5f;
 	RotateSpeed = 50.0f;
 	CurrentSpeed = 0.0f;
+
+	ThrusterMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Thruster Mesh"));
+	ThrusterMeshComp->SetupAttachment(MeshComp);
+	ThrusterMeshComp->SetVisibility(false);
+	InitialThrusterZ = ThrusterMeshComp->GetRelativeLocation().X;
+	ThrusterLocationOffset = -65.0f;
+	ThrusterAmplitudeOffset = 10.0f;
+	ThrusterPeriodOffset = 10.0f;
+	RunningTime = 0.0f;
 }
 
 void ARocketPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SpawnLocation = GetActorLocation();
+	SpawnRotation = GetActorRotation();
 
 	//PlayerControllerRef = Cast<APlayerController>(GetController());
 }
@@ -29,8 +42,19 @@ void ARocketPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (ThrusterMeshComp->IsVisible())
+	{
+		FVector NewThrusterLocation = ThrusterMeshComp->GetRelativeLocation();
+
+		//NewLocation.Z += FMath::Sin(RunningTime);
+		NewThrusterLocation.Z = ThrusterLocationOffset + ThrusterAmplitudeOffset * FMath::Sin(ThrusterPeriodOffset * RunningTime);
+		
+		ThrusterMeshComp->SetRelativeLocation(NewThrusterLocation);
+		RunningTime += DeltaTime;
+	}
+
 	Rotate();
-	Move();	
+	Move();
 
 	//UE_LOG(LogTemp, Warning, TEXT("Forward Vector: %f, %f, %f"), GetActorForwardVector().X, GetActorForwardVector().Y, GetActorForwardVector().Z);
 }
@@ -48,13 +72,15 @@ void ARocketPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 void ARocketPawn::CalculateMoveInput(float Value)
 {
 	// Give player rocket momentum if MoveForward input is not pressed and CurrentSpeed is not depleted fully by FrictionAmount 
-	if (Value > 0.0f)
+	if (Value >= 1.0f)
 	{
+		ThrusterMeshComp->SetVisibility(true);
 		CurrentSpeed = MoveSpeed;
 		PreviousForward = GetActorForwardVector();
 	}
 	else if (CurrentSpeed > 0.0f)
 	{
+		ThrusterMeshComp->SetVisibility(false);
 		CurrentSpeed -= FrictionAmount;
 		Value = 1.0f;
 		FMath::Clamp(CurrentSpeed, 0.0f, MoveSpeed);
@@ -88,11 +114,36 @@ void ARocketPawn::Rotate()
 
 void ARocketPawn::DestroyPawn()
 {
+	SetActorEnableCollision(false);
+	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetIsPlayerAlive(false);
 
 	SetActorHiddenInGame(true);
 	SetActorTickEnabled(false);
 
+	FadeOut();
+
 	//Super::DestroyPawn();
 }
 
+void ARocketPawn::RevivePlayer()
+{
+	FTimerHandle PlayerInvincibilityHandle;
+	FTimerDelegate PlayerInvincibilityDelegate = FTimerDelegate::CreateUObject(this, &ARocketPawn::TurnOffInvincibility);
+
+	GetWorld()->GetTimerManager().SetTimer(PlayerInvincibilityHandle, PlayerInvincibilityDelegate, InvincibilityDelay, false);
+
+	SetActorLocation(SpawnLocation);
+	SetActorRotation(SpawnRotation);
+	
+	SetActorHiddenInGame(false);
+	SetActorTickEnabled(true);
+	SetIsPlayerAlive(true);
+}
+
+void ARocketPawn::TurnOffInvincibility()
+{
+	FadeIn();
+	SetActorEnableCollision(true);	
+	//HitBoxComp->SetCollisionEnabled(ECollisionEnabled:: );
+}
