@@ -68,7 +68,16 @@ void ARocketPawn::CalculateMoveInput(float Value)
 		ThrusterMeshComp->SetVisibility(false);
 		CurrentSpeed -= FrictionAmount;
 		Value = 1.0f;
-		FMath::Clamp(CurrentSpeed, 0.0f, MoveSpeed);
+		//FMath::Clamp(CurrentSpeed, 0.0f, MoveSpeed);
+
+		if (CurrentSpeed < 0.0f)
+		{
+			CurrentSpeed = 0.0f;
+		}
+		else if (CurrentSpeed > MoveSpeed)
+		{
+			CurrentSpeed = MoveSpeed;
+		}
 	}
 
 	MoveDirection = PreviousForward * Value * CurrentSpeed * GetWorld()->DeltaTimeSeconds;
